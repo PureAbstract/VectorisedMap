@@ -112,3 +112,114 @@ TEST_CASE( "vmap/from_small_reverse_map", "Construct a vmap from a reversed map"
     REQUIRE( std::distance(vmap1.begin(),vmap1.end()) == vmap1.size() );
     REQUIRE( maps_equal( vmap1, themap ) );
 }
+
+// Construct a std::map for the lb tests
+std::map<int,int> lb_map()
+{
+    std::map<int,int> map;
+    map[-10] = 1;
+    map[ -5] = 2;
+    map[  0] = 3;
+    map[  5] = 4;
+    map[ 10] = 5;
+    REQUIRE( map.size() == 5 );
+    return map;
+}
+
+TEST_CASE( "vmap/lower_bound_less", "Check lower_bound, key less than all values" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(-15) != amap.end() );
+    REQUIRE( amap.lower_bound(-15)->first == -10 );
+    REQUIRE( vmap1.lower_bound(-15) != vmap1.end() );
+    REQUIRE( vmap1.lower_bound(-15)->first == -10 );
+}
+
+TEST_CASE( "vmap/lower_bound_begin", "Check lower_bound, key equal to smallest values" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(-10) != amap.end() );
+    REQUIRE( amap.lower_bound(-10)->first == -10 );
+    REQUIRE( vmap1.lower_bound(-10) != vmap1.end() );
+    REQUIRE( vmap1.lower_bound(-10)->first == -10 );
+}
+
+TEST_CASE( "vmap/lower_bound_inside", "Check lower_bound, key in range, but not present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(-7) != amap.end() );
+    REQUIRE( amap.lower_bound(-7)->first == -5 );
+    REQUIRE( vmap1.lower_bound(-7) != vmap1.end() );
+    REQUIRE( vmap1.lower_bound(-7)->first == 0 );
+}
+
+TEST_CASE( "vmap/lower_bound_present", "Check lower_bound, key in map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(5) != amap.end() );
+    REQUIRE( amap.lower_bound(5)->first == 5 );
+    // REQUIRE( vmap1.lower_bound(5) != vmap1.end() );
+    // REQUIRE( vmap1.lower_bound(5)->first == 5 );
+}
+
+TEST_CASE( "vmap/lower_bound_upper", "Check lower_bound, key is highest value in map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(10) != amap.end() );
+    REQUIRE( amap.lower_bound(10)->first == 10 );
+    REQUIRE( vmap1.lower_bound(10) != vmap1.end() );
+    REQUIRE( vmap1.lower_bound(10)->first == 0 );
+}
+
+TEST_CASE( "vmap/lower_bound_above", "Check lower_bound, key is greater than values in map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap( lb_map() );
+    vmap_type vmap1( amap );
+
+    REQUIRE( maps_equal( vmap1, amap ) );
+    REQUIRE( amap.lower_bound(15) == amap.end() );
+    REQUIRE( vmap1.lower_bound(15) == vmap1.end() );
+}
