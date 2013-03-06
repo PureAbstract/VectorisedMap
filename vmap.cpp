@@ -324,4 +324,41 @@ TEST_CASE( "vmap/upper_bound_above", "Check upper_bound, key is greater than val
     REQUIRE( vmap1.upper_bound(15) == vmap1.end() );
 }
 
+TEST_CASE( "vmap/find_fail", "find : key not in map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
 
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal(amap,vmap) );
+    REQUIRE( amap.find(-20) == amap.end() );
+    REQUIRE( vmap.find(-20) == vmap.end() );
+}
+
+TEST_CASE( "vmap/find_success", "find : key in map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal(amap,vmap) );
+    for( map_type::const_iterator iter = amap.begin() ;
+         iter != amap.end() ;
+         ++iter )
+    {
+        const key_type& key = iter->first;
+        REQUIRE( amap.find(key) != amap.end() );
+        REQUIRE( amap.find(key) == iter );
+        REQUIRE( amap.find(key)->first == key );
+        REQUIRE( vmap.find(key) != vmap.end() );
+        REQUIRE( vmap.find(key)->first == key );
+    }
+}
