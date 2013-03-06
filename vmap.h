@@ -148,6 +148,7 @@ public:
         return std::make_pair( lower_bound(key),
                                upper_bound(key) );
     }
+
     const_iterator find( const key_type& key ) const noexcept
     {
         const_iterator iter = lower_bound(key);
@@ -169,12 +170,14 @@ public:
     // Return the mapped value for key, or defalt if non present
     const mapped_type& get( const key_type& key, const mapped_type& defalt ) const noexcept
     {
-        return defalt; // FAIL
+        const_iterator iter = find(key);
+        return ( iter == end() ) ? defalt : iter->second;
     }
     // Return the mapped value for key, or mapped_type() if non present
     mapped_type get( const key_type& key ) const noexcept
     {
-        return mapped_type(); // FAIL
+        const_iterator iter = find(key);
+        return ( iter == end() ) ? mapped_type() : iter->second;
     }
     
 private:
