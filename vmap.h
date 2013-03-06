@@ -17,7 +17,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
-#ifndef cpp_0x
+#if __cplusplus < 2001103L
 #define noexcept
 #endif
 
@@ -72,7 +72,7 @@ public:
     iterator               end()      const noexcept { return vector_.end();    }
     reverse_iterator       rbegin()   const noexcept { return vector_.rbegin(); }
     reverse_iterator       rend()     const noexcept { return vector_.rend();   }
-#ifdef cpp_0x
+#if __cplusplus >= 201103L
     const_iterator         cbegin()   const noexcept { return vector_.cbegin();  }
     const_iterator         cend()     const noexcept { return vector_.cend();    }
     const_reverse_iterator crbegin()  const noexcept { return vector_.crbegin(); }
@@ -94,7 +94,7 @@ private:
     impl_type vector_;
     key_compare compare_;
 };
-#ifndef cpp_0x
+#if __cplusplus < 201103
 #undef noexcept
 #endif
 #endif /* #ifndef vmap_h_included */
