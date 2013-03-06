@@ -179,7 +179,7 @@ public:
 
     const_iterator find( const key_type& key ) const noexcept
     {
-        const_iterator iter = lower_bound(key);
+        const const_iterator iter = lower_bound(key);
         if( iter != end() )
         {
             if( !compare_(key,iter->first) )
@@ -191,7 +191,12 @@ public:
     // Return the mapped value, or throw std::out_of_range
     const mapped_type& at( const key_type& key ) const
     {
-        throw std::out_of_range("vmap: key not found"); // FAIL
+        const const_iterator iter = find(key);
+        if( iter == end() )
+        {
+            throw std::out_of_range("vmap: key not found"); // FAIL
+        }
+        return iter->second;
     }
 
     // I find these to be handy:
