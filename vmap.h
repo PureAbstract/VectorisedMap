@@ -33,9 +33,13 @@ public:
     typedef MappedType mapped_type;
     typedef Predicate key_compare;
     typedef Allocator allocator_type;
+    // FIXME: This should be const key_type
     typedef std::pair<key_type,mapped_type> value_type;
+
+    // FIXME: Implementation details: Probably ought to privatise these...
     typedef vmap<key_type,mapped_type,key_compare,allocator_type> this_type;
     typedef std::vector<value_type,allocator_type> impl_type;
+    
     typedef typename impl_type::size_type size_type;
 
     typedef typename impl_type::const_iterator         iterator;
