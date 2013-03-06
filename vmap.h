@@ -142,6 +142,7 @@ public:
         }
         return start;
     }    
+
     std::pair<const_iterator,const_iterator> equal_range( const key_type& key ) const noexcept
     {
         // This is workable, but non optimal.
@@ -160,6 +161,7 @@ public:
         return end();
     }
 
+    // Return the mapped value, or throw std::out_of_range
     const mapped_type& at( const key_type& key ) const
     {
         throw std::out_of_range("vmap: key not found"); // FAIL
