@@ -81,10 +81,15 @@ public:
     key_compare key_comp() const noexcept
     { return compare_; }
 
-    iterator               begin()    const noexcept { return vector_.begin();  }
-    iterator               end()      const noexcept { return vector_.end();    }
-    reverse_iterator       rbegin()   const noexcept { return vector_.rbegin(); }
-    reverse_iterator       rend()     const noexcept { return vector_.rend();   }
+    iterator               begin()          noexcept { return vector_.begin();  }
+    iterator               end()            noexcept { return vector_.end();    }
+    reverse_iterator       rbegin()         noexcept { return vector_.rbegin(); }
+    reverse_iterator       rend()           noexcept { return vector_.rend();   }
+
+    const_iterator         begin()    const noexcept { return vector_.begin();  }
+    const_iterator         end()      const noexcept { return vector_.end();    }
+    const_reverse_iterator rbegin()   const noexcept { return vector_.rbegin(); }
+    const_reverse_iterator rend()     const noexcept { return vector_.rend();   }
 #if __cplusplus >= 201103L
     const_iterator         cbegin()   const noexcept { return vector_.cbegin();  }
     const_iterator         cend()     const noexcept { return vector_.cend();    }
