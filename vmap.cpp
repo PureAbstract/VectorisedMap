@@ -447,21 +447,26 @@ TEST_CASE( "vmap/equal_range/found", "equal_range : key present" )
     range_type r = vmap.equal_range(-10);
     REQUIRE( r.first != r.second );
     REQUIRE( (r.first+1) == r.second );
+    REQUIRE( r.first->first == -10 );
 
     r = vmap.equal_range(-5);
     REQUIRE( r.first != r.second );
     REQUIRE( (r.first+1) == r.second );
+    REQUIRE( r.first->first == -5 );
 
     r = vmap.equal_range(0);
     REQUIRE( r.first != r.second );
     REQUIRE( (r.first+1) == r.second );
+    REQUIRE( r.first->first == 0 );
 
     r = vmap.equal_range(5);
     REQUIRE( r.first != r.second );
     REQUIRE( (r.first+1) == r.second );
+    REQUIRE( r.first->first == 5 );
 
     r = vmap.equal_range(10);
     REQUIRE( r.first != r.second );
     REQUIRE( (r.first+1) == r.second );
+    REQUIRE( r.first->first == 10 );
 
 }
