@@ -368,3 +368,42 @@ TEST_CASE( "vmap/find/success", "find : key in map" )
         REQUIRE( vmap.find(key)->first == key );
     }
 }
+
+TEST_CASE( "vmap/get/fail", "get : key not present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal( vmap, amap ) );
+    REQUIRE( vmap.get(-99) == key_type() );
+    REQUIRE( vmap.get(-99,-99) == -99 );
+}
+
+TEST_CASE( "vmap/get/pass", "get : key not present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal( vmap, amap ) );
+    REQUIRE( vmap.get(-10) == 1 );
+    REQUIRE( vmap.get(-10,-99) == 1 );
+    REQUIRE( vmap.get(-5) == 2 );
+    REQUIRE( vmap.get(-5,-99) == 2 );
+    REQUIRE( vmap.get(0) == 3 );
+    REQUIRE( vmap.get(0,-99) == 3 );
+    REQUIRE( vmap.get(5) == 4 );
+    REQUIRE( vmap.get(5,-99) == 4 );
+    REQUIRE( vmap.get(10) == 5 );
+    REQUIRE( vmap.get(10,-99) == 5 );
+
+}
