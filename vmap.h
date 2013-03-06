@@ -56,22 +56,27 @@ public:
     explicit vmap( const std::map<key_type,mapped_type,key_compare>& map );
 
     // The usual suspects...
-    size_type size() const noexcept;
-    bool empty() const noexcept;
-    size_type max_size() const noexcept;
+    size_type size() const noexcept
+    { return vector_.size(); }
+    bool empty() const noexcept
+    { return vector_.empty(); }
+    size_type max_size() const noexcept
+    { return vector_.max_size(); }
 
-    allocator_type get_allocator() const noexcept;
-    key_compare key_comp() const noexcept;
+    allocator_type get_allocator() const noexcept
+    { return vector_.get_allocator(); }
+    key_compare key_comp() const noexcept
+    { return compare_; }
 
-    iterator               begin()    const noexcept;
-    iterator               end()      const noexcept;
-    reverse_iterator       rbegin()   const noexcept;
-    reverse_iterator       rend()     const noexcept;
+    iterator               begin()    const noexcept { return vector_.begin();  }
+    iterator               end()      const noexcept { return vector_.end();    }
+    reverse_iterator       rbegin()   const noexcept { return vector_.rbegin(); }
+    reverse_iterator       rend()     const noexcept { return vector_.rend();   }
 #ifdef cpp_0x
-    const_iterator         cbegin()   const noexcept;
-    const_iterator         cend()     const noexcept;
-    const_reverse_iterator crbegin()  const noexcept;
-    const_reverse_iterator crend()    const noexcept;
+    const_iterator         cbegin()   const noexcept { return vector_.cbegin();  }
+    const_iterator         cend()     const noexcept { return vector_.cend();    }
+    const_reverse_iterator crbegin()  const noexcept { return vector_.crbegin(); }
+    const_reverse_iterator crend()    const noexcept { return vector_.crend();   }
 #endif
 
     const_iterator lower_bound( const key_type& key ) const noexcept;
@@ -89,5 +94,7 @@ private:
     impl_type vector_;
     key_compare compare_;
 };
-
+#ifndef cpp_0x
+#undef noexcept
+#endif
 #endif /* #ifndef vmap_h_included */
