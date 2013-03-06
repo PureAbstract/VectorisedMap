@@ -53,7 +53,13 @@ public:
     
     // TODO: templatize on map's Allocator
     // Q: Should be allow that to differ from vmap's allocator?
-    explicit vmap( const std::map<key_type,mapped_type,key_compare>& map );
+    explicit vmap( const std::map<key_type,mapped_type,key_compare>& map )
+      : compare_( map.key_comp() )
+    {
+        vector_.reserve(map.size());
+        vector_.insert(vector_.end(),map.begin(),map.end());
+    }
+
 
     // The usual suspects...
     size_type size() const noexcept
