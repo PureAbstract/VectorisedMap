@@ -470,3 +470,37 @@ TEST_CASE( "vmap/equal_range/found", "equal_range : key present" )
     REQUIRE( r.first->first == 10 );
 
 }
+
+
+TEST_CASE( "vmap/at/pass", "at: Key is present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( vmap.at(-10) == 1 );
+    REQUIRE( vmap.at(-5) == 2 );
+    REQUIRE( vmap.at(0) == 3 );
+    REQUIRE( vmap.at(5) == 4 );
+    REQUIRE( vmap.at(10) == 5 );
+}
+
+
+TEST_CASE( "vmap/at/fail", "at: Key not present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE_THROWS_AS( vmap.at(-42), std::out_of_range );
+    REQUIRE_THROWS_AS( vmap.at(-7), std::out_of_range );
+    REQUIRE_THROWS_AS( vmap.at(25), std::out_of_range );
+}
