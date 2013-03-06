@@ -99,11 +99,48 @@ public:
 
     const_iterator lower_bound( const key_type& key ) const noexcept
     {
-        return end(); // FAIL
+        const_iterator start = begin();
+        size_type length = size();
+        while( length > 0 )
+        {
+            const size_type offset = length / 2;
+            const const_iterator midpt = start + offset;
+            const value_type& value = *midpt;
+            if( compare_( value.first, key ) )
+            {
+                // value < key - search the upper half
+                start = midpt + 1;
+                length -= offset+1;
+            }
+            else
+            {
+                // value >= key; search the lower half
+                length = offset;
+            }
+        }
+        return start;
     }
+
     const_iterator upper_bound( const key_type& key ) const noexcept
     {
-        return end(); // FAIL
+        const_iterator start = begin();
+        size_type length = size();
+        while( length > 0 )
+        {
+            const size_type offset = length / 2;
+            const const_iterator midpt = start + offset;
+            const value_type& value = *midpt;
+            if( !compare_( key, value.first ) )
+            {
+                start = midpt+1;
+                length -= offset+1;
+            }
+            else
+            {
+                length = offset;
+            }
+        }
+        return start;
     }    
     std::pair<const_iterator,const_iterator> equal_range( const key_type& key ) const noexcept
     {
