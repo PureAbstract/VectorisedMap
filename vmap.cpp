@@ -105,6 +105,10 @@ TEST_CASE( "vmap/from_small_reverse_map", "Construct a vmap from a reversed map"
     REQUIRE( vmap1.size() == themap.size() );
     REQUIRE( vmap1.size() == 2 );
     REQUIRE( vmap1.begin() != vmap1.end() );
+    REQUIRE( vmap1.begin()->first == 1 );
+    REQUIRE( vmap1.begin()->second == 11 );
+    REQUIRE( vmap1.rbegin()->first == 0 );
+    REQUIRE( vmap1.rbegin()->second == 10 );
     REQUIRE( std::distance(vmap1.begin(),vmap1.end()) == vmap1.size() );
     REQUIRE( maps_equal( vmap1, themap ) );
 }
