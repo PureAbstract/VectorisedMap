@@ -405,5 +405,63 @@ TEST_CASE( "vmap/get/pass", "get : key not present" )
     REQUIRE( vmap.get(5,-99) == 4 );
     REQUIRE( vmap.get(10) == 5 );
     REQUIRE( vmap.get(10,-99) == 5 );
+}
+
+
+TEST_CASE( "vmap/equal_range/none", "equal_range : key not present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    typedef std::pair<vmap_type::const_iterator,vmap_type::const_iterator> range_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal( vmap, amap ) );
+    range_type r = vmap.equal_range(-42);
+    REQUIRE( r.first == r.second );
+    r = vmap.equal_range(-7);
+    REQUIRE( r.first == r.second );
+    r = vmap.equal_range(7);
+    REQUIRE( r.first == r.second );
+    r = vmap.equal_range(42);
+    REQUIRE( r.first == r.second );
+}
+
+TEST_CASE( "vmap/equal_range/found", "equal_range : key present" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type> vmap_type;
+
+    typedef std::pair<vmap_type::const_iterator,vmap_type::const_iterator> range_type;
+
+    map_type amap(bounds_map());
+    vmap_type vmap(amap);
+
+    REQUIRE( maps_equal( vmap, amap ) );
+    range_type r = vmap.equal_range(-10);
+    REQUIRE( r.first != r.second );
+    REQUIRE( (r.first+1) == r.second );
+
+    r = vmap.equal_range(-5);
+    REQUIRE( r.first != r.second );
+    REQUIRE( (r.first+1) == r.second );
+
+    r = vmap.equal_range(0);
+    REQUIRE( r.first != r.second );
+    REQUIRE( (r.first+1) == r.second );
+
+    r = vmap.equal_range(5);
+    REQUIRE( r.first != r.second );
+    REQUIRE( (r.first+1) == r.second );
+
+    r = vmap.equal_range(10);
+    REQUIRE( r.first != r.second );
+    REQUIRE( (r.first+1) == r.second );
 
 }
