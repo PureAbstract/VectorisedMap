@@ -150,7 +150,13 @@ public:
     }
     const_iterator find( const key_type& key ) const noexcept
     {
-        return end(); // Fail
+        const_iterator iter = lower_bound(key);
+        if( iter != end() )
+        {
+            if( !compare_(key,iter->first) )
+                return iter;
+        }
+        return end();
     }
 
     const mapped_type& at( const key_type& key ) const
