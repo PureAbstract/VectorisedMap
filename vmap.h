@@ -17,7 +17,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
-#if __cplusplus < 2001103L
+#if __cplusplus < 201103L
 #define noexcept
 #endif
 
@@ -94,7 +94,7 @@ private:
     impl_type vector_;
     key_compare compare_;
 };
-#if __cplusplus < 201103
+#if __cplusplus < 201103L
 #undef noexcept
 #endif
 #endif /* #ifndef vmap_h_included */
