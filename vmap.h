@@ -90,18 +90,49 @@ public:
     const_iterator         cend()     const noexcept { return vector_.cend();    }
     const_reverse_iterator crbegin()  const noexcept { return vector_.crbegin(); }
     const_reverse_iterator crend()    const noexcept { return vector_.crend();   }
+#else
+    const_iterator         cbegin()   const noexcept { return vector_.begin();  }
+    const_iterator         cend()     const noexcept { return vector_.end();    }
+    const_reverse_iterator crbegin()  const noexcept { return vector_.rbegin(); }
+    const_reverse_iterator crend()    const noexcept { return vector_.rend();   }
 #endif
 
-    const_iterator lower_bound( const key_type& key ) const noexcept;
-    const_iterator upper_bound( const key_type& key ) const noexcept;
-    std::pair<const_iterator,const_iterator> equal_range( const key_type& key ) const noexcept;
-    const_iterator find( const key_type& key ) const noexcept;
+    const_iterator lower_bound( const key_type& key ) const noexcept
+    {
+        return end(); // FAIL
+    }
+    const_iterator upper_bound( const key_type& key ) const noexcept
+    {
+        return end(); // FAIL
+    }    
+    std::pair<const_iterator,const_iterator> equal_range( const key_type& key ) const noexcept
+    {
+        // This is workable, but non optimal.
+        return std::make_pair( lower_bound(key),
+                               upper_bound(key) );
+    }
+    const_iterator find( const key_type& key ) const noexcept
+    {
+        return end(); // Fail
+    }
 
-    const mapped_type& at( const key_type& key ) const;
+    const mapped_type& at( const key_type& key ) const
+    {
+        throw std::out_of_range("vmap: key not found"); // FAIL
+    }
 
-    // I find these to be handy
-    const mapped_type& get( const key_type& key, const mapped_type& defalt ) const noexcept;
-    mapped_type get( const key_type& key ) const noexcept;
+    // I find these to be handy:
+
+    // Return the mapped value for key, or defalt if non present
+    const mapped_type& get( const key_type& key, const mapped_type& defalt ) const noexcept
+    {
+        return defalt; // FAIL
+    }
+    // Return the mapped value for key, or mapped_type() if non present
+    mapped_type get( const key_type& key ) const noexcept
+    {
+        return mapped_type(); // FAIL
+    }
     
 private:
     impl_type vector_;
