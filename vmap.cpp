@@ -126,7 +126,7 @@ std::map<int,int> bounds_map()
     return map;
 }
 
-TEST_CASE( "vmap/lower_bound_less", "Check lower_bound, key less than all values" )
+TEST_CASE( "vmap/lower_bound/less", "Check lower_bound, key less than all values" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -142,7 +142,7 @@ TEST_CASE( "vmap/lower_bound_less", "Check lower_bound, key less than all values
     REQUIRE( vmap1.lower_bound(-15)->first == -10 );
 }
 
-TEST_CASE( "vmap/lower_bound_begin", "Check lower_bound, key equal to smallest values" )
+TEST_CASE( "vmap/lower_bound/begin", "Check lower_bound, key equal to smallest values" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -158,7 +158,7 @@ TEST_CASE( "vmap/lower_bound_begin", "Check lower_bound, key equal to smallest v
     REQUIRE( vmap1.lower_bound(-10)->first == -10 );
 }
 
-TEST_CASE( "vmap/lower_bound_inside", "Check lower_bound, key in range, but not present" )
+TEST_CASE( "vmap/lower_bound/inside", "Check lower_bound, key in range, but not present" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -175,7 +175,7 @@ TEST_CASE( "vmap/lower_bound_inside", "Check lower_bound, key in range, but not 
     REQUIRE( vmap1.lower_bound(-7)->first == -5 );
 }
 
-TEST_CASE( "vmap/lower_bound_present", "Check lower_bound, key in map" )
+TEST_CASE( "vmap/lower_bound/present", "Check lower_bound, key in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -192,7 +192,7 @@ TEST_CASE( "vmap/lower_bound_present", "Check lower_bound, key in map" )
     REQUIRE( vmap1.lower_bound(5)->first == 5 );
 }
 
-TEST_CASE( "vmap/lower_bound_upper", "Check lower_bound, key is highest value in map" )
+TEST_CASE( "vmap/lower_bound/upper", "Check lower_bound, key is highest value in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -209,7 +209,7 @@ TEST_CASE( "vmap/lower_bound_upper", "Check lower_bound, key is highest value in
     REQUIRE( vmap1.lower_bound(10)->first == 10 );
 }
 
-TEST_CASE( "vmap/lower_bound_above", "Check lower_bound, key is greater than values in map" )
+TEST_CASE( "vmap/lower_bound/above", "Check lower_bound, key is greater than values in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -223,12 +223,8 @@ TEST_CASE( "vmap/lower_bound_above", "Check lower_bound, key is greater than val
     REQUIRE( amap.lower_bound(15) == amap.end() );
     REQUIRE( vmap1.lower_bound(15) == vmap1.end() );
 }
-
-
-//====================
     
-    
-TEST_CASE( "vmap/upper_bound_less", "Check upper_bound, key less than all values" )
+TEST_CASE( "vmap/upper_bound/less", "Check upper_bound, key less than all values" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -244,7 +240,7 @@ TEST_CASE( "vmap/upper_bound_less", "Check upper_bound, key less than all values
     REQUIRE( vmap1.upper_bound(-15)->first == -10 );
 }
 
-TEST_CASE( "vmap/upper_bound_begin", "Check upper_bound, key equal to smallest values" )
+TEST_CASE( "vmap/upper_bound/begin", "Check upper_bound, key equal to smallest values" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -260,7 +256,7 @@ TEST_CASE( "vmap/upper_bound_begin", "Check upper_bound, key equal to smallest v
     REQUIRE( vmap1.upper_bound(-10)->first == -5 );
 }
 
-TEST_CASE( "vmap/upper_bound_inside", "Check upper_bound, key in range, but not present" )
+TEST_CASE( "vmap/upper_bound/inside", "Check upper_bound, key in range, but not present" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -277,7 +273,7 @@ TEST_CASE( "vmap/upper_bound_inside", "Check upper_bound, key in range, but not 
     REQUIRE( vmap1.upper_bound(-7)->first == -5 );
 }
 
-TEST_CASE( "vmap/upper_bound_present", "Check upper_bound, key in map" )
+TEST_CASE( "vmap/upper_bound/present", "Check upper_bound, key in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -294,7 +290,7 @@ TEST_CASE( "vmap/upper_bound_present", "Check upper_bound, key in map" )
     REQUIRE( vmap1.upper_bound(5)->first == 10 );
 }
 
-TEST_CASE( "vmap/upper_bound_upper", "Check upper_bound, key is highest value in map" )
+TEST_CASE( "vmap/upper_bound/upper", "Check upper_bound, key is highest value in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -309,7 +305,7 @@ TEST_CASE( "vmap/upper_bound_upper", "Check upper_bound, key is highest value in
     REQUIRE( vmap1.upper_bound(10) == vmap1.end() );
 }
 
-TEST_CASE( "vmap/upper_bound_above", "Check upper_bound, key is greater than values in map" )
+TEST_CASE( "vmap/upper_bound/above", "Check upper_bound, key is greater than values in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -324,7 +320,7 @@ TEST_CASE( "vmap/upper_bound_above", "Check upper_bound, key is greater than val
     REQUIRE( vmap1.upper_bound(15) == vmap1.end() );
 }
 
-TEST_CASE( "vmap/find_fail", "find : key not in map" )
+TEST_CASE( "vmap/find/fail", "find : key not in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -335,11 +331,21 @@ TEST_CASE( "vmap/find_fail", "find : key not in map" )
     vmap_type vmap(amap);
 
     REQUIRE( maps_equal(amap,vmap) );
+
     REQUIRE( amap.find(-20) == amap.end() );
     REQUIRE( vmap.find(-20) == vmap.end() );
+
+    REQUIRE( amap.find(-7) == amap.end() );
+    REQUIRE( vmap.find(-7) == vmap.end() );
+
+    REQUIRE( amap.find(7) == amap.end() );
+    REQUIRE( vmap.find(7) == vmap.end() );
+
+    REQUIRE( amap.find(20) == amap.end() );
+    REQUIRE( vmap.find(20) == vmap.end() );
 }
 
-TEST_CASE( "vmap/find_success", "find : key in map" )
+TEST_CASE( "vmap/find/success", "find : key in map" )
 {
     typedef int key_type;
     typedef int mapped_type;
