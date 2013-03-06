@@ -45,14 +45,17 @@ public:
 
     // defaults are ok for:
     // - dtor
-    // - default ctor (but what use is it?)
     // - copy ctor
     // - move ctor
     // - assign
     // - move assign
-    
+
+    // - default ctor (but what use is it?)
+    vmap() {}
+
     // TODO: templatize on map's Allocator
     // Q: Should be allow that to differ from vmap's allocator?
+    // A: Yes.
     explicit vmap( const std::map<key_type,mapped_type,key_compare>& map )
       : compare_( map.key_comp() )
     {
