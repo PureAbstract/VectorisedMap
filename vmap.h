@@ -145,9 +145,31 @@ public:
 
     std::pair<const_iterator,const_iterator> equal_range( const key_type& key ) const noexcept
     {
-        // This is workable, but non optimal.
-        return std::make_pair( lower_bound(key),
-                               upper_bound(key) );
+        const_iterator start = begin();
+        size_type length = size();
+        while( length > 0 )
+        {
+            const size_type offset = length/2;
+            const const_iterator midpt = start+offset;
+            const value_type& value = *midpt;
+            if( compare_( value.first, key ) )
+            {
+                // value < key - go high
+                start = midpt+1;
+                length -= offset+1;
+            }
+            else if( compare_( key, value.first ) )
+            {
+                // key < value - go low
+                length = offset;
+            }
+            else
+            {
+                // got it
+                return std::make_pair(midpt,midpt+1);
+            }
+        }
+        return std::make_pair(end(),end());
     }
 
     const_iterator find( const key_type& key ) const noexcept
