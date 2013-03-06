@@ -2,16 +2,16 @@ LDLIBS=-lstdc++
 #CPPFLAGS=-std=c++0x
 
 .PHONY: all
-all: vmap test
+all: test
 
 .PHONY: clean
 clean:
-	-rm vmap vmap.o
+	-rm vmap-test vmap-test.o
 
 .PHONY: test
-test: vmap
-	./vmap
+test: vmap-test
+	./vmap-test
 
-vmap: vmap.o
+vmap-test: vmap-test.o
 
-vmap.o : vmap.cpp vmap.h
+vmap-test.o : vmap-test.cpp vmap.h
