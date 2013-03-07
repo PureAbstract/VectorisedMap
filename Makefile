@@ -1,5 +1,6 @@
 LDLIBS=-lstdc++
-#CPPFLAGS=-std=c++0x
+## Enable c++0x/c++11 features. Dilute to taste.
+#CPPFLAGS=-std=c++0x -DVMAP_CONFIG_NOEXCEPT -DVMAP_CONFIG_CBEGIN
 
 .PHONY: all
 all: test
