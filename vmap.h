@@ -199,7 +199,7 @@ public:
         const const_iterator iter = find(key);
         if( iter == end() )
         {
-            throw std::out_of_range("vmap: key not found"); // FAIL
+            throw std::out_of_range("vmap: key not found");
         }
         return iter->second;
     }
