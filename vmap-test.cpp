@@ -16,12 +16,14 @@ bool maps_equal( const VmapT& vmap, const MapT& map )
     REQUIRE( std::distance(vmap.begin(),vmap.end()) == vmap.size() );
     typename VmapT::const_iterator viter = vmap.begin();
     typename MapT::const_iterator miter = map.begin();
-    for( typename MapT::size_type i = 0 ; i < map.size() ; ++i, ++viter, ++miter )
+    while( miter != map.end() )
     {
         REQUIRE( viter != vmap.end() );
+        //REQUIRE( *viter == *miter );
         REQUIRE( viter->first == miter->first );
         REQUIRE( viter->second == miter->second );
-        //REQUIRE( *viter == *miter );
+        ++miter;
+        ++viter;
     }
     REQUIRE( viter == vmap.end() );
     REQUIRE( miter == map.end() );
@@ -30,7 +32,7 @@ bool maps_equal( const VmapT& vmap, const MapT& map )
 
 
 
-TEST_CASE( "vmap/default_construct", "Default construct a vmap" )
+TEST_CASE( "vmap/ctor/default", "Default construct a vmap" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -40,7 +42,7 @@ TEST_CASE( "vmap/default_construct", "Default construct a vmap" )
     REQUIRE( vmap1.begin() == vmap1.end() );
 }
 
-TEST_CASE( "vmap/copy_default", "Copy a default-constructed vmap" )
+TEST_CASE( "vmap/ctor/copy_default", "Copy a default-constructed vmap" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -53,7 +55,7 @@ TEST_CASE( "vmap/copy_default", "Copy a default-constructed vmap" )
     REQUIRE( maps_equal( vmap1, vmap2 ) );
 }
 
-TEST_CASE( "vmap/from_empty_map", "Construct a vmap from an empty map" )
+TEST_CASE( "vmap/ctor/from_empty_map", "Construct a vmap from an empty map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -67,7 +69,8 @@ TEST_CASE( "vmap/from_empty_map", "Construct a vmap from an empty map" )
     REQUIRE( maps_equal( vmap1, themap ) );
 }
 
-TEST_CASE( "vmap/from_small_map", "Construct a vmap from a small map" )
+
+TEST_CASE( "vmap/ctor/from_small_map", "Construct a vmap from a small map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -88,7 +91,34 @@ TEST_CASE( "vmap/from_small_map", "Construct a vmap from a small map" )
     REQUIRE( maps_equal( vmap1, themap ) );
 }
 
-TEST_CASE( "vmap/from_small_reverse_map", "Construct a vmap from a reversed map" )
+TEST_CASE( "vmap/ctor/copy_small", "Copy a vmap constructed from a small map" )
+{
+    typedef int key_type;
+    typedef int mapped_type;
+    typedef std::map<key_type,mapped_type> map_type;
+    typedef vmap<key_type,mapped_type>  vmap_type;
+
+    map_type map;
+    map[-1] = -10;
+    map[ 0] =  10;
+    map[ 1] =  20;
+    // Sanity:
+    REQUIRE( map.size() == 3 );
+    REQUIRE( map.begin()->first == -1 );
+
+    // Copy the map...
+    vmap_type vmap1( map );
+    REQUIRE( maps_equal( vmap1, map ) );
+    // Copy the vmap
+    vmap_type vmap2( vmap1 );
+    REQUIRE( maps_equal( vmap1, map ) );
+    REQUIRE( maps_equal( vmap2, map ) );
+    REQUIRE( maps_equal( vmap1, vmap2 ) );
+    
+}
+
+
+TEST_CASE( "vmap/ctor/from_small_reverse_map", "Construct a vmap from a reversed map" )
 {
     typedef int key_type;
     typedef int mapped_type;
@@ -125,6 +155,22 @@ std::map<int,int> bounds_map()
     REQUIRE( map.size() == 5 );
     return map;
 }
+
+TEST_CASE( "vmap/ctor/move", "Ensure the move ctor actually moves!" )
+{
+#ifdef VMAP_CONFIG_MOVE
+    std::map<int,int> amap(bounds_map());
+    vmap<int,int> vec1(amap);
+    REQUIRE( maps_equal( vec1, amap ) );
+    REQUIRE(!vec1.empty());
+    vmap<int,int> vec2(std::move(vec1));
+    REQUIRE( maps_equal( vec2, amap ) );
+    REQUIRE(vec1.empty());
+#else
+    WARN( "Move semantics not enabled" );
+#endif
+}
+
 
 TEST_CASE( "vmap/lower_bound/less", "Check lower_bound, key less than all values" )
 {

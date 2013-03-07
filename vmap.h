@@ -15,6 +15,7 @@
 Feature macros:
   #define VMAP_CONFIG_NOEXCEPT   -- compile supports 'noexcept' function decorator
   #define VMAP_CONFIG_CBEGIN     -- std::containers have cbegin/cend/crbegin/crend
+  #define VMAP_CONFIG_MOVE       -- enable move sematics
 */
 #include <functional>
 #include <memory>
@@ -55,22 +56,48 @@ public:
     // defaults are ok for:
     // - dtor
     // - copy ctor
-    // - move ctor
     // - assign
-    // - move assign
 
-    // - default ctor (but what use is it?)
+    // - default ctor
     vmap() {}
 
+    explicit vmap( const allocator_type& allocator )
+    : vector_( allocator )
+    {}
+#ifdef VMAP_CONFIG_MOVE
+    explicit vmap( allocator_type&& allocator )
+    : vector_( std::move(allocator) )
+    {}
+#endif
+
     // TODO: templatize on map's Allocator
-    // Q: Should be allow that to differ from vmap's allocator?
+    // Q: Should be allow that to differ from vmap's allocator type?
     // A: Yes.
+    // ... but where do we get the vector's allocator from?
+    // (currently, it's default constructed - which is find for most allocator types, but you never know)
     explicit vmap( const std::map<key_type,mapped_type,key_compare>& map )
       : compare_( map.key_comp() )
     {
         vector_.reserve(map.size());
         vector_.insert(vector_.end(),map.begin(),map.end());
     }
+    // TODO: Consider a map&& ctor??
+
+#ifdef VMAP_CONFIG_MOVE
+    // Move ctor
+    vmap( vmap&& that )
+      : vector_( std::move(that.vector_) )
+      , compare_( std::move(that.compare_))
+    {
+    }
+    // Move-assignment
+    vmap& operator=( vmap&& that )
+    {
+        vector_ = std::move(that.vector_);
+        compare_ = std::move(that.compare_);
+        return *this;
+    }
+#endif
 
 
     // The usual suspects...
@@ -218,7 +245,14 @@ public:
         const_iterator iter = find(key);
         return ( iter == end() ) ? mapped_type() : iter->second;
     }
-    
+
+
+    void swap( vmap& that )
+    {
+        using std::swap;
+        vector_.swap(that.vector_);
+        swap( compare_, that.compare_ );
+    }
 private:
     impl_type vector_;
     key_compare compare_;
