@@ -10,14 +10,19 @@
   Primary use-case is:
   1) Build a std::map in the usual fashion
   2) Convert it to a vmap
-  3) use vmap for lookups
+  3) use vmap for lookup
+
+Feature macros:
+  #define VMAP_CONFIG_NOEXCEPT   -- compile supports 'noexcept' function decorator
+  #define VMAP_CONFIG_CBEGIN     -- std::containers have cbegin/cend/crbegin/crend
 */
 #include <functional>
 #include <memory>
 #include <vector>
 #include <map>
 #include <stdexcept>
-#if __cplusplus < 201103L
+
+#ifndef VMAP_CONFIG_NOEXCEPT
 #define noexcept
 #endif
 
@@ -90,7 +95,7 @@ public:
     const_iterator         end()      const noexcept { return vector_.end();    }
     const_reverse_iterator rbegin()   const noexcept { return vector_.rbegin(); }
     const_reverse_iterator rend()     const noexcept { return vector_.rend();   }
-#if __cplusplus >= 201103L
+#ifdef VMAP_CONFIG_CBEGIN
     const_iterator         cbegin()   const noexcept { return vector_.cbegin();  }
     const_iterator         cend()     const noexcept { return vector_.cend();    }
     const_reverse_iterator crbegin()  const noexcept { return vector_.crbegin(); }
@@ -218,7 +223,8 @@ private:
     impl_type vector_;
     key_compare compare_;
 };
-#if __cplusplus < 201103L
+
+#ifndef VMAP_CONFIG_NOEXCEPT
 #undef noexcept
 #endif
 #endif /* #ifndef vmap_h_included */
